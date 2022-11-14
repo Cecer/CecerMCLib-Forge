@@ -1,0 +1,11 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "com.cecer1.projects.mc.cecermclib.forge.environment.mixin",
+    "target": "@env(DEFAULT)",
+    "compatibilityLevel": "JAVA_8",
+    "client": [
+        "GuiScreenMixin"
+    ],
+    "server": []
+}

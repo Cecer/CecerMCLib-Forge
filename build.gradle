@@ -1,0 +1,153 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "https://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sponge"
+            url = "https://repo.spongepowered.org/maven"
+        }
+    }
+    dependencies {
+        classpath "net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT"
+        classpath "org.spongepowered:mixingradle:0.6-SNAPSHOT"
+    }
+}
+
+plugins {
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
+}
+
+apply plugin: "net.minecraftforge.gradle.forge"
+apply plugin: "org.spongepowered.mixin"
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    jcenter()
+    maven {
+        name "sonatype"
+        url "https://oss.sonatype.org/content/repositories/snapshots"
+    }
+    maven {
+        name "sponge"
+        url "https://repo.spongepowered.org/maven"
+    }
+    maven {
+        name "cecer-maven.public-releases"
+        url "https://maven.cecer1.com/repository/public-releases/"
+    }
+    maven {
+        name "cecer-maven.public-snapshots"
+        url "https://maven.cecer1.com/repository/public-snapshots/"
+    }
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+version = modVersion
+group = modGroup
+archivesBaseName = modId
+
+minecraft {
+    version = project.forgeVersion
+    runDir = "run"
+
+    mappings = project.mcpVersion
+}
+
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
+dependencies {
+    compile("org.spongepowered:mixin:0.7.11-SNAPSHOT") {
+        exclude module: "launchwrapper"
+    }
+    
+    compile("com.cecer1.projects.mc.cecermclib:cecermclib-common:${project.version}")
+}
+
+shadowJar {
+    dependencies {
+        include(dependency("org.spongepowered:mixin:0.7.11-SNAPSHOT"))
+        include(dependency("com.cecer1.projects.mc.cecermclib:cecermclib-common:${project.version}"))
+    }
+    archiveName "${modId}.jar"
+}
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+reobf {
+    shadowJar {}
+}
+
+mixin {
+    add sourceSets.main, "mixins.${modId}.refmap.json"
+    defaultObfuscationEnv searge
+}
+
+processResources
+{
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand  'modid': project.modId,
+                'version': project.version,
+                'mcversion': project.minecraft.version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}
+
+jar {
+    manifest.attributes(
+            "TweakClass": "org.spongepowered.asm.launch.MixinTweaker",
+            "MixinConfigs": "cecermclib-forge.mixins.json",
+            "FMLCorePluginContainsFMLMod": "true",
+            "ForceLoadAsMod": "true",
+            "FMLCorePlugin": "com.cecer1.projects.mc.cecermclib.forge.environment.ForgeLoadingPlugin"
+    )
+
+    archiveName "${modId}.jar"
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = "dev"
+    archiveName "${modId}-dev.jar"
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    from javadoc.destinationDir
+    classifier = "javadoc"
+    archiveName "${modId}-javadoc.jar"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = "sources"
+    archiveName "${modId}-sources.jar"
+}
+artifacts {
+    archives deobfJar
+//    archives javadocJar
+//    archives sourcesJar
+}
+
+//tasks.build.dependsOn("sourcesJar", "deobfJar", "javadocJar")
+tasks.build.dependsOn("deobfJar")

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "${modid}",
+  "name": "CecerMCLib (for Forge)",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://www.cecer1.com/",
+  "updateUrl": "",
+  "authorList": ["Cecer"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
