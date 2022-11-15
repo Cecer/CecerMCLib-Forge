@@ -79,7 +79,7 @@ shadowJar {
         include(dependency("org.spongepowered:mixin:0.7.11-SNAPSHOT"))
         include(dependency("com.cecer1.projects.mc.cecermclib:cecermclib-common:${project.version}"))
     }
-    archiveName "${modId}.jar"
+    archiveName "${modId}-${modVersion}.jar"
 }
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
@@ -124,24 +124,24 @@ jar {
             "FMLCorePlugin": "com.cecer1.projects.mc.cecermclib.forge.environment.mod.ForgeLoadingPlugin"
     )
 
-    archiveName "${modId}.jar"
+    archiveName "${modId}-${modVersion}.jar"
 }
 
 task deobfJar(type: Jar) {
     from sourceSets.main.output
     classifier = "dev"
-    archiveName "${modId}-dev.jar"
+    archiveName "${modId}-${modVersion}-dev.jar"
 }
 task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
     classifier = "javadoc"
-    archiveName "${modId}-javadoc.jar"
+    archiveName "${modId}-${modVersion}-javadoc.jar"
 }
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = "sources"
-    archiveName "${modId}-sources.jar"
+    archiveName "${modId}-${modVersion}-sources.jar";
 }
 artifacts {
     archives deobfJar
