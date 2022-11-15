@@ -121,7 +121,7 @@ jar {
             "MixinConfigs": "cecermclib-forge.mixins.json",
             "FMLCorePluginContainsFMLMod": "true",
             "ForceLoadAsMod": "true",
-            "FMLCorePlugin": "com.cecer1.projects.mc.cecermclib.forge.environment.ForgeLoadingPlugin"
+            "FMLCorePlugin": "com.cecer1.projects.mc.cecermclib.forge.environment.mod.ForgeLoadingPlugin"
     )
 
     archiveName "${modId}.jar"

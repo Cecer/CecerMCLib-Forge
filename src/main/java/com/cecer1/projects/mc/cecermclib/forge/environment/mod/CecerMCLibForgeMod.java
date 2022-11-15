@@ -11,8 +11,8 @@ public class CecerMCLibForgeMod {
     public static final String VERSION = "1.0";
     
     @SidedProxy(
-            clientSide = "com.cecer1.projects.mc.cecermclib.forge.environment.mod.ClientProxy",
-            serverSide = "com.cecer1.projects.mc.cecermclib.forge.environment.mod.ServerProxy")
+            clientSide = "com.cecer1.projects.mc.cecermclib.forge.environment.mod.ForgeProxy$Client",
+            serverSide = "com.cecer1.projects.mc.cecermclib.forge.environment.mod.ForgeProxy$Server")
     public static ForgeProxy proxy;
 
     @Mod.EventHandler
