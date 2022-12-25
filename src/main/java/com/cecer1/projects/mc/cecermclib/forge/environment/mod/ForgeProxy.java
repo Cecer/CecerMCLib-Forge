@@ -24,7 +24,7 @@ public abstract class ForgeProxy {
         @SubscribeEvent
         public void onClientChatReceived(ClientChatReceivedEvent event) {
             WrappedForgeComponent component = new WrappedForgeComponent(event.message);
-            CecerMCLib.get(ChatMetadataModule.class).process(new ChatMessageData(component, 0));
+            CecerMCLib.get(ChatMetadataModule.class).process(new ChatMessageData(component));
         }
     }
 
